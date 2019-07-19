@@ -67,9 +67,17 @@ if __name__ == '__main__':
     print('Using config:')
     pprint.pprint(cfg)
 
-    while not os.path.exists(args.model) and args.wait:
-        print('Waiting for {} to exist...'.format(args.model))
-        time.sleep(1000)
+    #while not os.path.exists(args.model) and args.wait:
+    #    print('Waiting for {} to exist...'.format(args.model))
+   #     time.sleep(1000)
+    checkpoint_dir = os.path.dirname(args.model)
+    while True:
+        ckpt = tf.train.get_checkpoint_state(checkpoint_dir)
+        if ckpt and ckpt.model_checkpoint_path:
+            break
+        else:
+            print('Waiting for {} to exist...'.format(checkpoint_dir))
+            time.sleep(10)
 
     weights_filename = os.path.splitext(os.path.basename(args.model))[0]
 
